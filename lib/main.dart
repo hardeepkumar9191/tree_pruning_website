@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
-  runApp(const TreePruningApp());
+  runApp(const TreePruningApp()); // Removed portfolio, using required images
 }
 
 class TreePruningApp extends StatelessWidget {
@@ -15,7 +16,7 @@ class TreePruningApp extends StatelessWidget {
       title: 'TreeCare Pro - Professional Tree Pruning Services',
       theme: ThemeData(
         primarySwatch: Colors.green,
-        textTheme: GoogleFonts.dmSerifTextTextTheme(),
+        textTheme: GoogleFonts.openSansTextTheme(),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const HomePage(),
@@ -62,7 +63,6 @@ class _HomePageState extends State<HomePage> {
             delegate: SliverChildListDelegate([
               _buildHeroSection(context),
               _buildServicesSection(context),
-              _buildPortfolioSection(context),
               _buildContactSection(context),
               _buildFooter(context),
             ]),
@@ -73,73 +73,167 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildAppBar(BuildContext context) {
+    final scrollProgress = (_scrollOffset / 200).clamp(0.0, 1.0);
+    final backgroundColor = Color.lerp(
+      Colors.white.withOpacity(0.95),
+      Colors.white,
+      scrollProgress,
+    )!;
+    final elevation = scrollProgress * 8;
+
     return SliverAppBar(
-      expandedHeight: 80,
+      expandedHeight: 120,
       floating: true,
       pinned: true,
-      backgroundColor: Colors.white,
-      elevation: 2,
+      snap: true,
+      backgroundColor: backgroundColor,
+      elevation: elevation,
+      shadowColor: Colors.black26,
+      forceElevated: true,
       flexibleSpace: FlexibleSpaceBar(
-        titlePadding: const EdgeInsets.all(0),
+        centerTitle: false,
+        titlePadding: EdgeInsets.zero,
+        background: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.white.withOpacity(0.9),
+                Colors.white,
+              ],
+            ),
+          ),
+        ),
         title: Container(
-          height: 80,
+          height: kToolbarHeight,
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const Icon(Icons.nature, color: Colors.green, size: 32),
-                  const SizedBox(width: 10),
-                  Text(
-                    'TreeCare Pro',
-                    style: GoogleFonts.dmSerifText(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                  // Logo and company name
+                  Flexible(
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          height: 28 + (6 * (1 - scrollProgress)),
+                          width: 28 + (6 * (1 - scrollProgress)),
+                          child: SvgPicture.asset(
+                            'assets/images/logo.svg',
+                            height: 28 + (6 * (1 - scrollProgress)),
+                            width: 28 + (6 * (1 - scrollProgress)),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: AnimatedDefaultTextStyle(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            style: GoogleFonts.openSans(
+                              fontSize: 18 + (3 * (1 - scrollProgress)),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                            child: const Text(
+                              'TreeCare Pro',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-              if (MediaQuery.of(context).size.width > 768)
-                Row(
-                  children: [
-                    _buildNavButton('Home', () {}),
-                    _buildNavButton('Services', () => _scrollToSection(1)),
-                    _buildNavButton('Portfolio', () => _scrollToSection(2)),
-                    _buildNavButton('Contact', () => _scrollToSection(3)),
-                    const SizedBox(width: 20),
-                    ElevatedButton(
-                      onPressed: () => _scrollToSection(3),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  // Navigation menu
+                  if (MediaQuery.of(context).size.width > 768)
+                    Flexible(
+                      flex: 3,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (constraints.maxWidth > 900) ...[
+                            _buildNavButton('Home', () {}, scrollProgress),
+                            _buildNavButton('Services', () => _scrollToSection(1), scrollProgress),
+                            _buildNavButton('Contact', () => _scrollToSection(2), scrollProgress),
+                            const SizedBox(width: 16),
+                          ],
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 300),
+                            child: ElevatedButton(
+                              onPressed: () => _scrollToSection(2),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 16 + (6 * (1 - scrollProgress)),
+                                  vertical: 10 + (2 * (1 - scrollProgress)),
+                                ),
+                                elevation: 2 + (2 * (1 - scrollProgress)),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: Text(
+                                'Free Estimate',
+                                style: TextStyle(
+                                  fontSize: 13 + (1 * (1 - scrollProgress)),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: const Text('Free Estimate'),
+                    )
+                  else
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.menu,
+                          color: Colors.black87,
+                          size: 22 + (3 * (1 - scrollProgress)),
+                        ),
+                        onPressed: () => _showMobileMenu(context),
+                      ),
                     ),
-                  ],
-                )
-              else
-                IconButton(
-                  icon: const Icon(Icons.menu, color: Colors.black87),
-                  onPressed: () => _showMobileMenu(context),
-                ),
-            ],
+                ],
+              );
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget _buildNavButton(String text, VoidCallback onPressed) {
-    return TextButton(
-      onPressed: onPressed,
-      child: Text(
-        text,
-        style: const TextStyle(
-          color: Colors.black87,
-          fontWeight: FontWeight.w500,
+  Widget _buildNavButton(String text, VoidCallback onPressed, double scrollProgress) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.symmetric(
+            horizontal: 12 + (4 * (1 - scrollProgress)),
+            vertical: 8 + (2 * (1 - scrollProgress)),
+          ),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            color: Colors.black87,
+            fontWeight: FontWeight.w500,
+            fontSize: 14 + (1 * (1 - scrollProgress)),
+          ),
         ),
       ),
     );
@@ -165,17 +259,10 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              title: const Text('Portfolio'),
-              onTap: () {
-                Navigator.pop(context);
-                _scrollToSection(2);
-              },
-            ),
-            ListTile(
               title: const Text('Contact'),
               onTap: () {
                 Navigator.pop(context);
-                _scrollToSection(3);
+                _scrollToSection(2);
               },
             ),
           ],
@@ -198,7 +285,7 @@ class _HomePageState extends State<HomePage> {
               height: MediaQuery.of(context).size.height + 200,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/img1.png'),
+                  image: AssetImage('assets/images/Firefly_Generate images of tree cutting near a domestic neighbourhood 29638.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -224,7 +311,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Text(
                     'Professional Tree Pruning Services',
-                    style: GoogleFonts.dmSerifText(
+                    style: GoogleFonts.openSans(
                       fontSize: screenWidth > 768 ? 48 : 32,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -234,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 20),
                   Text(
                     'Expert tree care, pruning, and maintenance for your property',
-                    style: GoogleFonts.dmSerifText(
+                    style: GoogleFonts.openSans(
                       fontSize: screenWidth > 768 ? 20 : 16,
                       color: Colors.white70,
                     ),
@@ -245,7 +332,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () => _scrollToSection(3),
+                        onPressed: () => _scrollToSection(2),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
                           foregroundColor: Colors.white,
@@ -277,200 +364,263 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildServicesSection(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(80),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        image: DecorationImage(
-          image: AssetImage('assets/images/img3.png'),
-          fit: BoxFit.cover,
-          opacity: 0.05,
+    return Column(
+      children: [
+        // Services Header
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 80),
+          child: Column(
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
+                child: Text(
+                  'Our Professional Services',
+                  style: GoogleFonts.openSans(
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                width: 60,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ],
+          ),
         ),
+        // Individual Service Sections
+        _buildServiceParallaxSection(
+          title: 'Professional Tree Pruning',
+          description: 'Expert pruning techniques to enhance tree health, promote proper growth, and maintain aesthetic appeal. Our certified arborists understand the unique needs of each tree species.',
+          features: [
+            'Crown thinning and shaping',
+            'Deadwood removal',
+            'Structural pruning',
+            'Seasonal timing optimization'
+          ],
+          imagePath: 'assets/images/img1.png',
+          imageOnLeft: true,
+        ),
+        _buildServiceParallaxSection(
+          title: 'Safe Tree Removal',
+          description: 'When trees become hazardous or need to be removed, our team ensures safe, efficient removal with minimal impact to your property and surrounding landscape.',
+          features: [
+            'Hazardous tree assessment',
+            'Precision cutting techniques',
+            'Complete stump grinding',
+            'Debris cleanup and disposal'
+          ],
+          imagePath: 'assets/images/img2.png',
+          imageOnLeft: false,
+        ),
+        _buildServiceParallaxSection(
+          title: 'Tree Health & Disease Management',
+          description: 'Comprehensive tree health services including disease diagnosis, treatment, and preventive care to ensure your trees remain healthy and vibrant year-round.',
+          features: [
+            'Disease identification and treatment',
+            'Pest management solutions',
+            'Soil analysis and fertilization',
+            'Tree health monitoring'
+          ],
+          imagePath: 'assets/images/img3.png',
+          imageOnLeft: true,
+        ),
+        _buildServiceParallaxSection(
+          title: '24/7 Emergency Services',
+          description: 'Storm damage and emergency tree situations require immediate attention. Our emergency response team is available around the clock to address urgent tree safety concerns.',
+          features: [
+            'Storm damage cleanup',
+            'Emergency tree removal',
+            'Power line clearance',
+            'Insurance claim assistance'
+          ],
+          imagePath: 'assets/images/Firefly_Generate images of tree pruning, cutting, trimming, and lawn mowing 949191.jpg',
+          imageOnLeft: false,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildServiceParallaxSection({
+    required String title,
+    required String description,
+    required List<String> features,
+    required String imagePath,
+    required bool imageOnLeft,
+  }) {
+    return Container(
+      height: 600,
+      margin: const EdgeInsets.symmetric(vertical: 20),
+      clipBehavior: Clip.hardEdge, // Prevent overflow
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(0),
       ),
-      child: Column(
-        children: [
-          Text(
-            'Our Services',
-            style: GoogleFonts.dmSerifText(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 50),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              if (constraints.maxWidth > 900) {
-                return Row(
-                  children: _buildServiceCards().map((card) => Expanded(child: card)).toList(),
-                );
-              } else {
-                return Column(children: _buildServiceCards());
-              }
-            },
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Calculate parallax offset relative to this specific section
+          final parallaxOffset = (_scrollOffset * 0.1).clamp(-50.0, 50.0);
+          // Fixed opacity for gradient overlay (not tied to global scroll)
+          const gradientOpacity = 0.85;
+
+          return Stack(
+            clipBehavior: Clip.hardEdge, // Ensure content stays within bounds
+            children: [
+              // Parallax Background Image
+              Positioned.fill(
+                child: ClipRect( // Clip the image to container bounds
+                  child: Transform.translate(
+                    offset: Offset(0, parallaxOffset),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(imagePath),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: imageOnLeft ? Alignment.centerRight : Alignment.centerLeft,
+                            end: imageOnLeft ? Alignment.centerLeft : Alignment.centerRight,
+                            colors: [
+                              Colors.white.withOpacity(gradientOpacity),
+                              Colors.white.withOpacity(gradientOpacity * 0.8),
+                              Colors.white.withOpacity(gradientOpacity * 0.3),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Content
+              Positioned.fill(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+                  child: constraints.maxWidth > 768
+                      ? Row(
+                          children: imageOnLeft
+                              ? [
+                                  const Expanded(flex: 1, child: SizedBox()),
+                                  Expanded(flex: 1, child: _buildServiceContent(title, description, features, 1.0)),
+                                ]
+                              : [
+                                  Expanded(flex: 1, child: _buildServiceContent(title, description, features, 1.0)),
+                                  const Expanded(flex: 1, child: SizedBox()),
+                                ],
+                        )
+                      : Center(
+                          child: _buildServiceContent(title, description, features, 1.0),
+                        ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
-  List<Widget> _buildServiceCards() {
-    final services = [
-      {
-        'icon': Icons.content_cut,
-        'title': 'Tree Pruning',
-        'description': 'Professional pruning to maintain tree health and appearance',
-      },
-      {
-        'icon': Icons.warning,
-        'title': 'Tree Removal',
-        'description': 'Safe removal of hazardous or unwanted trees',
-      },
-      {
-        'icon': Icons.medical_services,
-        'title': 'Tree Health Care',
-        'description': 'Disease treatment and preventive care for your trees',
-      },
-      {
-        'icon': Icons.build,
-        'title': 'Emergency Services',
-        'description': '24/7 emergency tree services for storm damage',
-      },
-    ];
-
-    return services.map((service) => Card(
-      margin: const EdgeInsets.all(10),
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(30),
+  Widget _buildServiceContent(String title, String description, List<String> features, double opacity) {
+    return AnimatedOpacity(
+      opacity: opacity,
+      duration: const Duration(milliseconds: 300),
+      child: Container(
+        padding: const EdgeInsets.all(40),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.95),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              service['icon'] as IconData,
-              size: 48,
-              color: Colors.green,
+            Text(
+              title,
+              style: GoogleFonts.openSans(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
             ),
             const SizedBox(height: 20),
             Text(
-              service['title'] as String,
-              style: GoogleFonts.dmSerifText(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+              description,
+              style: GoogleFonts.openSans(
+                fontSize: 16,
+                height: 1.6,
+                color: Colors.black54,
               ),
             ),
-            const SizedBox(height: 15),
-            Text(
-              service['description'] as String,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.black54,
-                height: 1.5,
+            const SizedBox(height: 30),
+            ...features.map((feature) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      feature,
+                      style: GoogleFonts.openSans(
+                        fontSize: 14,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )).toList(),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () => _scrollToSection(2),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 5,
+              ),
+              child: Text(
+                'Get Free Estimate',
+                style: GoogleFonts.openSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],
         ),
       ),
-    )).toList();
-  }
-
-  Widget _buildPortfolioSection(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(80),
-      child: Column(
-        children: [
-          Text(
-            'Recent Projects',
-            style: GoogleFonts.dmSerifText(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 50),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final crossAxisCount = constraints.maxWidth > 900 ? 3 : constraints.maxWidth > 600 ? 2 : 1;
-              return GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  childAspectRatio: 1.2,
-                ),
-                itemCount: 6,
-                itemBuilder: (context, index) => _buildPortfolioCard(index),
-              );
-            },
-          ),
-        ],
-      ),
     );
   }
 
-  Widget _buildPortfolioCard(int index) {
-    final titles = [
-      'Oak Tree Pruning',
-      'Emergency Storm Cleanup',
-      'Residential Tree Care',
-      'Commercial Landscaping',
-      'Tree Health Assessment',
-      'Hazardous Tree Removal',
-    ];
 
-    final images = [
-      'assets/images/img2.png',
-      'assets/images/img3.png',
-      'assets/images/img1.png',
-      'assets/images/img2.png',
-      'assets/images/img3.png',
-      'assets/images/img1.png',
-    ];
-
-    return Card(
-      elevation: 8,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-                image: DecorationImage(
-                  image: AssetImage(images[index]),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      Colors.black.withOpacity(0.3),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Text(
-              titles[index],
-              style: GoogleFonts.dmSerifText(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildContactSection(BuildContext context) {
     return Container(
@@ -480,7 +630,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Text(
             'Contact Us',
-            style: GoogleFonts.dmSerifText(
+            style: GoogleFonts.openSans(
               fontSize: 36,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -524,7 +674,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text(
               'Get Your Free Estimate',
-              style: GoogleFonts.dmSerifText(
+              style: GoogleFonts.openSans(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -584,7 +734,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         Text(
           'Get In Touch',
-          style: GoogleFonts.dmSerifText(
+          style: GoogleFonts.openSans(
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
@@ -597,7 +747,7 @@ class _HomePageState extends State<HomePage> {
         const SizedBox(height: 30),
         Text(
           'Why Choose TreeCare Pro?',
-          style: GoogleFonts.dmSerifText(
+          style: GoogleFonts.openSans(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -651,11 +801,16 @@ class _HomePageState extends State<HomePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.nature, color: Colors.green, size: 32),
+              SvgPicture.asset(
+                'assets/images/logo.svg',
+                height: 32,
+                width: 32,
+                colorFilter: const ColorFilter.mode(Colors.green, BlendMode.srcIn),
+              ),
               const SizedBox(width: 10),
               Text(
                 'TreeCare Pro',
-                style: GoogleFonts.dmSerifText(
+                style: GoogleFonts.openSans(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
