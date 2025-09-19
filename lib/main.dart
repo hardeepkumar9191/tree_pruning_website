@@ -196,21 +196,24 @@ class _HomePageState extends State<HomePage> {
             offset: Offset(0, parallaxOffset),
             child: Container(
               height: MediaQuery.of(context).size.height + 200,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF2E7D32),
-                    Color(0xFF4CAF50),
-                  ],
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/img1.png'),
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
           Container(
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.3),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.4),
+                  Colors.green.withOpacity(0.3),
+                ],
+              ),
             ),
           ),
           Center(
@@ -276,7 +279,14 @@ class _HomePageState extends State<HomePage> {
   Widget _buildServicesSection(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(80),
-      color: Colors.grey[50],
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        image: DecorationImage(
+          image: AssetImage('assets/images/img3.png'),
+          fit: BoxFit.cover,
+          opacity: 0.05,
+        ),
+      ),
       child: Column(
         children: [
           Text(
@@ -409,22 +419,40 @@ class _HomePageState extends State<HomePage> {
       'Hazardous Tree Removal',
     ];
 
+    final images = [
+      'assets/images/img2.png',
+      'assets/images/img3.png',
+      'assets/images/img1.png',
+      'assets/images/img2.png',
+      'assets/images/img3.png',
+      'assets/images/img1.png',
+    ];
+
     return Card(
-      elevation: 4,
+      elevation: 8,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.green[100],
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                image: DecorationImage(
+                  image: AssetImage(images[index]),
+                  fit: BoxFit.cover,
+                ),
               ),
-              child: Center(
-                child: Icon(
-                  Icons.nature,
-                  size: 64,
-                  color: Colors.green[600],
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      Colors.black.withOpacity(0.3),
+                    ],
+                  ),
                 ),
               ),
             ),
