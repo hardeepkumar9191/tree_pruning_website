@@ -3,8 +3,38 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+// Professional color system for TreeCare Pro
+class AppColors {
+  // Primary green palette
+  static const Color primaryGreen = Color(0xFF2E7D32);
+  static const Color accentGreen = Color(0xFF4CAF50);
+  static const Color lightGreen = Color(0xFFE8F5E8);
+  static const Color darkGreen = Color(0xFF1B5E20);
+
+  // Accent colors
+  static const Color primaryRed = Color(0xFFD32F2F);
+  static const Color accentRed = Color(0xFFE57373);
+
+  // Neutral palette
+  static const Color neutral50 = Color(0xFFFAFAFA);
+  static const Color neutral100 = Color(0xFFF5F5F5);
+  static const Color neutral200 = Color(0xFFEEEEEE);
+  static const Color neutral300 = Color(0xFFE0E0E0);
+  static const Color neutral400 = Color(0xFFBDBDBD);
+  static const Color neutral500 = Color(0xFF9E9E9E);
+  static const Color neutral600 = Color(0xFF757575);
+  static const Color neutral700 = Color(0xFF616161);
+  static const Color neutral800 = Color(0xFF424242);
+  static const Color neutral900 = Color(0xFF212121);
+
+  // Surface colors
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color surfaceVariant = Color(0xFFF7F7F7);
+  static const Color surfaceContainer = Color(0xFFF3F3F3);
+}
+
 void main() {
-  runApp(const TreePruningApp()); // Removed portfolio, using required images
+  runApp(const TreePruningApp()); // Tree pruning app - fully responsive with scrollable content
 }
 
 class TreePruningApp extends StatelessWidget {
@@ -15,9 +45,122 @@ class TreePruningApp extends StatelessWidget {
     return MaterialApp(
       title: 'TreeCare Pro - Professional Tree Pruning Services',
       theme: ThemeData(
-        primarySwatch: Colors.green,
-        textTheme: GoogleFonts.openSansTextTheme(),
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.primaryGreen,
+          brightness: Brightness.light,
+          primary: AppColors.primaryGreen,
+          secondary: AppColors.accentGreen,
+          tertiary: AppColors.darkGreen,
+          surface: AppColors.surface,
+          surfaceVariant: AppColors.surfaceVariant,
+          surfaceContainer: AppColors.surfaceContainer,
+        ),
+        textTheme: GoogleFonts.interTextTheme(
+          Theme.of(context).textTheme,
+        ).copyWith(
+          displayLarge: GoogleFonts.inter(
+            fontSize: 57,
+            fontWeight: FontWeight.w400,
+            letterSpacing: -0.25,
+          ),
+          displayMedium: GoogleFonts.inter(
+            fontSize: 45,
+            fontWeight: FontWeight.w400,
+          ),
+          displaySmall: GoogleFonts.inter(
+            fontSize: 36,
+            fontWeight: FontWeight.w400,
+          ),
+          headlineLarge: GoogleFonts.inter(
+            fontSize: 32,
+            fontWeight: FontWeight.w600,
+          ),
+          headlineMedium: GoogleFonts.inter(
+            fontSize: 28,
+            fontWeight: FontWeight.w600,
+          ),
+          headlineSmall: GoogleFonts.inter(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+          ),
+          titleLarge: GoogleFonts.inter(
+            fontSize: 22,
+            fontWeight: FontWeight.w500,
+          ),
+          titleMedium: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          titleSmall: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+          bodyLarge: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+            height: 1.5,
+          ),
+          bodyMedium: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            height: 1.43,
+          ),
+          bodySmall: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            height: 1.33,
+          ),
+          labelLarge: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+          ),
+          labelMedium: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
+          labelSmall: GoogleFonts.inter(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            elevation: 1,
+            shadowColor: Colors.black26,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            side: const BorderSide(width: 1.5),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: AppColors.surfaceContainer,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: AppColors.neutral300),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: AppColors.primaryGreen, width: 2),
+          ),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        ),
       ),
       home: const HomePage(),
       debugShowCheckedModeBanner: false,
@@ -75,8 +218,8 @@ class _HomePageState extends State<HomePage> {
   Widget _buildAppBar(BuildContext context) {
     final scrollProgress = (_scrollOffset / 200).clamp(0.0, 1.0);
     final backgroundColor = Color.lerp(
-      Colors.white.withOpacity(0.95),
-      Colors.white,
+      AppColors.surface.withOpacity(0.95),
+      AppColors.surface,
       scrollProgress,
     )!;
     final elevation = scrollProgress * 8;
@@ -88,7 +231,7 @@ class _HomePageState extends State<HomePage> {
       snap: true,
       backgroundColor: backgroundColor,
       elevation: elevation,
-      shadowColor: Colors.black26,
+      shadowColor: AppColors.neutral400,
       forceElevated: true,
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: false,
@@ -99,8 +242,8 @@ class _HomePageState extends State<HomePage> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                Colors.white.withOpacity(0.9),
-                Colors.white,
+                AppColors.surface.withOpacity(0.9),
+                AppColors.surface,
               ],
             ),
           ),
@@ -138,10 +281,10 @@ class _HomePageState extends State<HomePage> {
                           child: AnimatedDefaultTextStyle(
                             duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut,
-                            style: GoogleFonts.openSans(
+                            style: GoogleFonts.inter(
                               fontSize: 18 + (3 * (1 - scrollProgress)),
                               fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                              color: AppColors.neutral800,
                             ),
                             child: const Text(
                               'TreeCare Pro',
@@ -172,8 +315,8 @@ class _HomePageState extends State<HomePage> {
                             child: ElevatedButton(
                               onPressed: () => _scrollToSection(2),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                                foregroundColor: Colors.white,
+                                backgroundColor: AppColors.primaryGreen,
+                                foregroundColor: AppColors.surface,
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 16 + (6 * (1 - scrollProgress)),
                                   vertical: 10 + (2 * (1 - scrollProgress)),
@@ -201,7 +344,7 @@ class _HomePageState extends State<HomePage> {
                       child: IconButton(
                         icon: Icon(
                           Icons.menu,
-                          color: Colors.black87,
+                          color: AppColors.neutral800,
                           size: 22 + (3 * (1 - scrollProgress)),
                         ),
                         onPressed: () => _showMobileMenu(context),
@@ -230,7 +373,7 @@ class _HomePageState extends State<HomePage> {
         child: Text(
           text,
           style: TextStyle(
-            color: Colors.black87,
+            color: AppColors.neutral800,
             fontWeight: FontWeight.w500,
             fontSize: 14 + (1 * (1 - scrollProgress)),
           ),
@@ -297,8 +440,8 @@ class _HomePageState extends State<HomePage> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.4),
-                  Colors.green.withOpacity(0.3),
+                  AppColors.neutral900.withOpacity(0.4),
+                  AppColors.primaryGreen.withOpacity(0.3),
                 ],
               ),
             ),
@@ -311,19 +454,19 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Text(
                     'Professional Tree Pruning Services',
-                    style: GoogleFonts.openSans(
+                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
                       fontSize: screenWidth > 768 ? 48 : 32,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppColors.surface,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 20),
                   Text(
                     'Expert tree care, pruning, and maintenance for your property',
-                    style: GoogleFonts.openSans(
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontSize: screenWidth > 768 ? 20 : 16,
-                      color: Colors.white70,
+                      color: AppColors.surface.withOpacity(0.7),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -334,8 +477,8 @@ class _HomePageState extends State<HomePage> {
                       ElevatedButton(
                         onPressed: () => _scrollToSection(2),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
+                          backgroundColor: AppColors.primaryRed,
+                          foregroundColor: AppColors.surface,
                           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                           textStyle: const TextStyle(fontSize: 18),
                         ),
@@ -345,8 +488,8 @@ class _HomePageState extends State<HomePage> {
                       OutlinedButton(
                         onPressed: () => _scrollToSection(1),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          side: const BorderSide(color: Colors.white),
+                          foregroundColor: AppColors.surface,
+                          side: BorderSide(color: AppColors.surface),
                           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                           textStyle: const TextStyle(fontSize: 18),
                         ),
@@ -375,10 +518,8 @@ class _HomePageState extends State<HomePage> {
                 duration: const Duration(milliseconds: 500),
                 child: Text(
                   'Our Professional Services',
-                  style: GoogleFonts.openSans(
-                    fontSize: 42,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    color: AppColors.neutral800,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -388,7 +529,7 @@ class _HomePageState extends State<HomePage> {
                 width: 60,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: AppColors.primaryGreen,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -456,9 +597,8 @@ class _HomePageState extends State<HomePage> {
     required bool imageOnLeft,
   }) {
     return Container(
-      height: 600,
       margin: const EdgeInsets.symmetric(vertical: 20),
-      clipBehavior: Clip.hardEdge, // Prevent overflow
+      clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(0),
       ),
@@ -466,63 +606,74 @@ class _HomePageState extends State<HomePage> {
         builder: (context, constraints) {
           // Calculate parallax offset relative to this specific section
           final parallaxOffset = (_scrollOffset * 0.1).clamp(-50.0, 50.0);
-          // Fixed opacity for gradient overlay (not tied to global scroll)
+          // Fixed opacity for gradient overlay
           const gradientOpacity = 0.85;
 
-          return Stack(
-            clipBehavior: Clip.hardEdge, // Ensure content stays within bounds
-            children: [
-              // Parallax Background Image
-              Positioned.fill(
-                child: ClipRect( // Clip the image to container bounds
-                  child: Transform.translate(
-                    offset: Offset(0, parallaxOffset),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage(imagePath),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+          return Container(
+            constraints: BoxConstraints(
+              minHeight: (MediaQuery.of(context).size.height * 0.4).clamp(300.0, 600.0),
+            ),
+            child: Stack(
+              children: [
+                // Parallax Background Image
+                Positioned.fill(
+                  child: ClipRect(
+                    child: Transform.translate(
+                      offset: Offset(0, parallaxOffset),
                       child: Container(
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: imageOnLeft ? Alignment.centerRight : Alignment.centerLeft,
-                            end: imageOnLeft ? Alignment.centerLeft : Alignment.centerRight,
-                            colors: [
-                              Colors.white.withOpacity(gradientOpacity),
-                              Colors.white.withOpacity(gradientOpacity * 0.8),
-                              Colors.white.withOpacity(gradientOpacity * 0.3),
-                            ],
+                          image: DecorationImage(
+                            image: AssetImage(imagePath),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: imageOnLeft ? Alignment.centerRight : Alignment.centerLeft,
+                              end: imageOnLeft ? Alignment.centerLeft : Alignment.centerRight,
+                              colors: [
+                                AppColors.surface.withOpacity(gradientOpacity),
+                                AppColors.surface.withOpacity(gradientOpacity * 0.8),
+                                AppColors.surface.withOpacity(gradientOpacity * 0.3),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              // Content
-              Positioned.fill(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+                // Content with dynamic sizing
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: (constraints.maxWidth * 0.05).clamp(16.0, 40.0),
+                    vertical: (MediaQuery.of(context).size.height * 0.05).clamp(20.0, 60.0),
+                  ),
                   child: constraints.maxWidth > 768
                       ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: imageOnLeft
                               ? [
                                   const Expanded(flex: 1, child: SizedBox()),
-                                  Expanded(flex: 1, child: _buildServiceContent(title, description, features, 1.0)),
+                                  Expanded(
+                                    flex: 1,
+                                    child: _buildServiceContent(title, description, features, 1.0),
+                                  ),
                                 ]
                               : [
-                                  Expanded(flex: 1, child: _buildServiceContent(title, description, features, 1.0)),
+                                  Expanded(
+                                    flex: 1,
+                                    child: _buildServiceContent(title, description, features, 1.0),
+                                  ),
                                   const Expanded(flex: 1, child: SizedBox()),
                                 ],
                         )
-                      : Center(
-                          child: _buildServiceContent(title, description, features, 1.0),
-                        ),
+                      : _buildServiceContent(title, description, features, 1.0),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
@@ -530,93 +681,162 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildServiceContent(String title, String description, List<String> features, double opacity) {
-    return AnimatedOpacity(
-      opacity: opacity,
-      duration: const Duration(milliseconds: 300),
-      child: Container(
-        padding: const EdgeInsets.all(40),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.95),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final screenHeight = MediaQuery.of(context).size.height;
+
+        // Dynamic sizing based on screen dimensions
+        final isSmallScreen = screenWidth < 768;
+        final isMediumScreen = screenWidth >= 768 && screenWidth < 1200;
+        final isLargeScreen = screenWidth >= 1200;
+
+        // Responsive padding (2-4% of screen width)
+        final horizontalPadding = (screenWidth * 0.03).clamp(12.0, 32.0);
+        final verticalPadding = (screenHeight * 0.02).clamp(8.0, 24.0);
+
+        // Responsive spacing
+        final titleSpacing = isSmallScreen ? 6.0 : (isMediumScreen ? 8.0 : 12.0);
+        final contentSpacing = isSmallScreen ? 6.0 : (isMediumScreen ? 8.0 : 12.0);
+        final featureSpacing = isSmallScreen ? 1.0 : (isMediumScreen ? 2.0 : 3.0);
+        final buttonSpacing = isSmallScreen ? 6.0 : (isMediumScreen ? 8.0 : 12.0);
+
+        // Responsive bullet size
+        final bulletSize = isSmallScreen ? 3.0 : (isMediumScreen ? 4.0 : 5.0);
+        final bulletMargin = isSmallScreen ? 3.0 : (isMediumScreen ? 4.0 : 6.0);
+        final bulletSpacing = isSmallScreen ? 6.0 : (isMediumScreen ? 8.0 : 12.0);
+
+        // Responsive button height
+        final buttonHeight = isSmallScreen ? 28.0 : (isMediumScreen ? 32.0 : 36.0);
+
+        return AnimatedOpacity(
+          opacity: opacity,
+          duration: const Duration(milliseconds: 300),
+          child: Container(
+            width: double.infinity,
+            constraints: BoxConstraints(
+              maxWidth: isSmallScreen ? double.infinity : (isMediumScreen ? 500 : 600),
             ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              title,
-              style: GoogleFonts.openSans(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
+            padding: EdgeInsets.symmetric(
+              horizontal: horizontalPadding,
+              vertical: verticalPadding,
             ),
-            const SizedBox(height: 20),
-            Text(
-              description,
-              style: GoogleFonts.openSans(
-                fontSize: 16,
-                height: 1.6,
-                color: Colors.black54,
-              ),
+            decoration: BoxDecoration(
+              color: AppColors.surface.withOpacity(0.95),
+              borderRadius: BorderRadius.circular(isSmallScreen ? 12 : 20),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.neutral900.withOpacity(0.1),
+                  blurRadius: isSmallScreen ? 10 : 20,
+                  offset: Offset(0, isSmallScreen ? 5 : 10),
+                ),
+              ],
             ),
-            const SizedBox(height: 30),
-            ...features.map((feature) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Container(
-                    width: 8,
-                    height: 8,
-                    decoration: const BoxDecoration(
-                      color: Colors.green,
-                      shape: BoxShape.circle,
-                    ),
+                // Dynamic title
+                Text(
+                  title,
+                  style: isSmallScreen
+                      ? Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: AppColors.neutral800,
+                          fontWeight: FontWeight.bold,
+                        )
+                      : isMediumScreen
+                          ? Theme.of(context).textTheme.titleLarge?.copyWith(
+                              color: AppColors.neutral800,
+                              fontWeight: FontWeight.bold,
+                            )
+                          : Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              color: AppColors.neutral800,
+                              fontWeight: FontWeight.bold,
+                            ),
+                ),
+                SizedBox(height: titleSpacing),
+
+                // Dynamic description
+                Text(
+                  description,
+                  style: isSmallScreen
+                      ? Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.neutral600,
+                          height: 1.3,
+                        )
+                      : Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.neutral600,
+                          height: 1.4,
+                        ),
+                ),
+                SizedBox(height: contentSpacing),
+
+                // Dynamic feature list
+                ...features.map((feature) => Padding(
+                  padding: EdgeInsets.symmetric(vertical: featureSpacing),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: bulletSize,
+                        height: bulletSize,
+                        margin: EdgeInsets.only(top: bulletMargin),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryGreen,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      SizedBox(width: bulletSpacing),
+                      Expanded(
+                        child: Text(
+                          feature,
+                          style: isSmallScreen
+                              ? Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: AppColors.neutral800,
+                                  fontWeight: FontWeight.w400,
+                                  height: 1.2,
+                                  fontSize: 11,
+                                )
+                              : Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: AppColors.neutral800,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.3,
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      feature,
-                      style: GoogleFonts.openSans(
-                        fontSize: 14,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500,
+                )).toList(),
+                SizedBox(height: buttonSpacing),
+
+                // Dynamic button
+                SizedBox(
+                  height: buttonHeight,
+                  child: ElevatedButton(
+                    onPressed: () => _scrollToSection(2),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryGreen,
+                      foregroundColor: AppColors.surface,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isSmallScreen ? 12 : 16,
+                        vertical: 0,
                       ),
                     ),
+                    child: Text(
+                      'Get Free Estimate',
+                      style: isSmallScreen
+                          ? Theme.of(context).textTheme.labelSmall
+                          : Theme.of(context).textTheme.labelMedium,
+                    ),
                   ),
-                ],
-              ),
-            )).toList(),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () => _scrollToSection(2),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
                 ),
-                elevation: 5,
-              ),
-              child: Text(
-                'Get Free Estimate',
-                style: GoogleFonts.openSans(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+              ],
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -625,15 +845,13 @@ class _HomePageState extends State<HomePage> {
   Widget _buildContactSection(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(80),
-      color: Colors.grey[50],
+      color: AppColors.neutral50,
       child: Column(
         children: [
           Text(
             'Contact Us',
-            style: GoogleFonts.openSans(
-              fontSize: 36,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              color: AppColors.neutral800,
             ),
           ),
           const SizedBox(height: 50),
@@ -674,30 +892,24 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text(
               'Get Your Free Estimate',
-              style: GoogleFonts.openSans(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 30),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Full Name',
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Email',
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
             TextField(
               decoration: InputDecoration(
                 labelText: 'Phone',
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
@@ -705,7 +917,6 @@ class _HomePageState extends State<HomePage> {
               maxLines: 4,
               decoration: InputDecoration(
                 labelText: 'Tell us about your project',
-                border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 30),
@@ -714,10 +925,8 @@ class _HomePageState extends State<HomePage> {
               child: ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  textStyle: const TextStyle(fontSize: 16),
+                  backgroundColor: AppColors.primaryGreen,
+                  foregroundColor: AppColors.surface,
                 ),
                 child: const Text('Send Message'),
               ),
@@ -734,10 +943,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         Text(
           'Get In Touch',
-          style: GoogleFonts.openSans(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: 30),
         _buildContactItem(Icons.phone, '(555) 123-4567', () => _launchPhone('5551234567')),
@@ -747,10 +953,7 @@ class _HomePageState extends State<HomePage> {
         const SizedBox(height: 30),
         Text(
           'Why Choose TreeCare Pro?',
-          style: GoogleFonts.openSans(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 15),
         _buildFeature('✓ Licensed & Insured'),
@@ -766,7 +969,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         children: [
-          Icon(icon, color: Colors.green),
+          Icon(icon, color: AppColors.primaryGreen),
           const SizedBox(width: 15),
           Expanded(
             child: GestureDetector(
@@ -787,7 +990,9 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 16, color: Colors.black87),
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: AppColors.neutral800,
+        ),
       ),
     );
   }
@@ -805,15 +1010,13 @@ class _HomePageState extends State<HomePage> {
                 'assets/images/logo.svg',
                 height: 32,
                 width: 32,
-                colorFilter: const ColorFilter.mode(Colors.green, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(AppColors.primaryGreen, BlendMode.srcIn),
               ),
               const SizedBox(width: 10),
               Text(
                 'TreeCare Pro',
-                style: GoogleFonts.openSans(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: AppColors.surface,
                 ),
               ),
             ],
@@ -821,7 +1024,7 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 20),
           Text(
             '© 2024 TreeCare Pro. All rights reserved.',
-            style: TextStyle(color: Colors.white70),
+            style: TextStyle(color: AppColors.surface.withOpacity(0.7)),
           ),
         ],
       ),
